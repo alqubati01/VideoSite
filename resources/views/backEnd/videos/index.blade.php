@@ -1,0 +1,65 @@
+@extends('backEnd.layouts.app')
+
+@section('title_page')
+   {{ $title_page }}
+@endsection
+
+@push('css')
+@endpush
+
+@section('content')
+    @component('backEnd.layouts.header')
+        @slot('nav_title')
+            {{ $title_page }}
+        @endslot
+    @endcomponent
+
+    @component('backEnd.shared.table', ['title_page' => $title_page, 'desc_page' => $desc_page])
+        @slot('addButton')
+            <a href="{{ route($routeName.'.create') }}" class="btn btn-white btn-round">Add {{ $singleModelName }}</a>
+        @endslot
+        <div class="table-responsive">
+        <table class="table">
+            <thead class=" text-primary">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Published</th>
+                <th>Category</th>
+                <th>User</th>
+                <th>Keywords</th>
+                <th>Description</th>
+                <th>Control</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($rows as $row)
+                <tr>
+                    <td>{{ $row->id }}</td>
+                    <td>{{ $row->name }}</td>
+                    <td>
+                        @if ($row->published)
+                            Published
+                        @else
+                            Hidden
+                        @endif
+                    </td>
+                    <td>{{ $row->category->name }}</td>
+                    <td>{{ $row->user->name }}</td>
+                    <td>{{ $row->meta_keyword }}</td>
+                    <td>{{ $row->meta_description }}</td>
+                    <td class="td-actions d-flex">
+                        @include('backEnd.shared.buttons.edit')
+                        @include('backEnd.shared.buttons.delete')
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        {!! $rows->links() !!}
+    </div>
+    @endcomponent
+@endsection
+
+@push('javascript')
+@endpush
